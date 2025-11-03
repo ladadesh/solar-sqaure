@@ -49,6 +49,7 @@ const SolarProOnboarding: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [uploadStatus, setUploadStatus] = useState<string>("");
+  const [isProfessionInput, setIsProfessionInput] = useState<boolean>(false);
 
   const [formData, setFormData] = useState<FormData>({
     SCRIPT_URL:
@@ -104,6 +105,19 @@ const SolarProOnboarding: React.FC = () => {
     "Retired / Salaried Individual",
   ];
 
+  const businessProfileOptions: string[] = [
+    "-- select --",
+    "High",
+    "Low",
+    "Very High",
+  ];
+  const footfallOptions: string[] = [
+    "-- select --",
+    "0–20",
+    "20–40",
+    "40–60",
+    "60+",
+  ];
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -116,6 +130,13 @@ const SolarProOnboarding: React.FC = () => {
       const cityLower = value.trim().toLowerCase();
       const state = cityLookup[cityLower] || "";
       setFormData((prev) => ({ ...prev, state }));
+    }
+
+    if (name === "profession" && value === "Other business") {
+      setIsProfessionInput(true);
+      setFormData((prev) => ({ ...prev, profession: "" })); // Clear profession when switching
+    } else if (name === "profession" && isProfessionInput && value === "") {
+      setIsProfessionInput(false);
     }
   };
 
@@ -203,32 +224,26 @@ const SolarProOnboarding: React.FC = () => {
     setPage(1);
   };
 
-  /**
-   * Helper to call Google Apps Script functions.
-   * @param functionName The name of the function to call in Code.gs
-   * @param payload The data to pass to the function
-   */
-  const gasp = async (functionName: string, payload: any = {}) => {
-    const response = await fetch(formData.SCRIPT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8",
-      },
-      body: JSON.stringify({ functionName, payload }),
-      mode: "cors", // Use 'cors' mode to allow reading the response
-    });
-    if (!response.ok) {
-      throw new Error(`Network response was not ok: ${response.statusText}`);
-    }
-    return response.json();
-  };
-
   const handleSubmit = async (): Promise<void> => {
     setIsSubmitting(true);
 
+    // Helper function to call Google Apps Script
+    const gasp = async (
+      func: string,
+      args: Record<string, any> = {}
+    ): Promise<any> => {
+      const res = await fetch(formData.SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ function: func, ...args }),
+      });
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      return res.json();
+    };
+
     if (
       !formData.SCRIPT_URL ||
-      formData.SCRIPT_URL === "YOUR_DEPLOYED_SCRIPT_URL_HERE"
+      formData.SCRIPT_URL.includes("YOUR_DEPLOYED_SCRIPT_URL")
     ) {
       alert(
         "Please set your Google Apps Script URL in the SCRIPT_URL constant."
@@ -252,7 +267,6 @@ const SolarProOnboarding: React.FC = () => {
 
       // 1.5 Get OAuth Token for file uploads
       setUploadStatus("Authenticating for file upload...");
-      // Use the gasp helper to call the getOAuthToken function via the POST router
       const tokenRes = await gasp("getOAuthToken");
       if (!tokenRes.success) throw new Error("Could not get auth token.");
       const { token } = tokenRes;
@@ -275,7 +289,7 @@ const SolarProOnboarding: React.FC = () => {
             method: "POST",
             headers: new Headers({
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // <-- ADD AUTH TOKEN
+              Authorization: `Bearer ${token}`,
             }),
             body: JSON.stringify({ name: file.name, parents: [folderId] }),
           }
@@ -288,9 +302,7 @@ const SolarProOnboarding: React.FC = () => {
 
         const uploadRes = await fetch(location, {
           method: "PUT",
-          headers: new Headers({
-            "Content-Length": String(file.size),
-          }),
+          headers: new Headers({ "Content-Length": String(file.size) }),
           body: file,
         });
 
@@ -519,21 +531,32 @@ const SolarProOnboarding: React.FC = () => {
                     <label className="block text-xs sm:text-sm font-medium mb-1">
                       Profession / Profile
                     </label>
-                    <select
-                      name="profession"
-                      value={formData.profession}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                      {professionOptions.map((opt) => (
-                        <option
-                          key={opt}
-                          value={opt === "-- select --" ? "" : opt}
-                        >
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
+                    {isProfessionInput ? (
+                      <input
+                        type="text"
+                        name="profession"
+                        value={formData.profession}
+                        onChange={handleInputChange}
+                        placeholder="Enter your profession"
+                        className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    ) : (
+                      <select
+                        name="profession"
+                        value={formData.profession}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+                        {professionOptions.map((opt) => (
+                          <option
+                            key={opt}
+                            value={opt === "-- select --" ? "" : opt}
+                          >
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   </div>
                 </div>
 
@@ -571,27 +594,41 @@ const SolarProOnboarding: React.FC = () => {
                     <label className="block text-xs sm:text-sm font-medium mb-1">
                       Business Profile
                     </label>
-                    <input
-                      type="text"
+                    <select
                       name="businessProfile"
                       value={formData.businessProfile}
                       onChange={handleInputChange}
-                      placeholder="e.g., Retailer"
                       className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
+                    >
+                      {businessProfileOptions.map((opt) => (
+                        <option
+                          key={opt}
+                          value={opt === "-- select --" ? "" : opt}
+                        >
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-xs sm:text-sm font-medium mb-1">
                       Foot Fall
                     </label>
-                    <input
-                      type="text"
+                    <select
                       name="footFall"
                       value={formData.footFall}
                       onChange={handleInputChange}
-                      placeholder="e.g., 50/day"
                       className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
+                    >
+                      {footfallOptions.map((opt) => (
+                        <option
+                          key={opt}
+                          value={opt === "-- select --" ? "" : opt}
+                        >
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>
