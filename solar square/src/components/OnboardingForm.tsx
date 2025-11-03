@@ -53,7 +53,7 @@ const SolarProOnboarding: React.FC = () => {
 
   const [formData, setFormData] = useState<FormData>({
     SCRIPT_URL:
-      "https://script.google.com/macros/s/AKfycbzPH2slH4ZVpBSiNGI0N3jmkaLfPQLA6W7qkaThkAZ3qK06TJktGT2sxXQNi8mb1oXb/exec", // <-- IMPORTANT: PASTE YOUR URL HERE
+      "https://script.google.com/macros/s/AKfycbz7mc6SgEnsl_v0Vd6Y9u7RDlLXGFLrEaG-sdw31wL_2aKsYE0X7K0PgWsZ8-eM7HMx/exec", // <-- IMPORTANT: PASTE YOUR URL HERE
     kamName: "",
     kamEmail: "",
     partnerName: "",
@@ -101,8 +101,10 @@ const SolarProOnboarding: React.FC = () => {
     "Electric / Hardware Contractor Shops",
     "Freelancer",
     "Inverter supplier / dealer",
-    "Other business",
     "Retired / Salaried Individual",
+    "EV - Car / Bike Showroom / Dealers",
+    "Electricity Billing Counters",
+    "Other business",
   ];
 
   const businessProfileOptions: string[] = [
@@ -592,7 +594,7 @@ const SolarProOnboarding: React.FC = () => {
                 <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   <div>
                     <label className="block text-xs sm:text-sm font-medium mb-1">
-                      Business Profile
+                      Business Potential
                     </label>
                     <select
                       name="businessProfile"
