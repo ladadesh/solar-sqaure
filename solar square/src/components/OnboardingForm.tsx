@@ -49,7 +49,6 @@ const SolarProOnboarding: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [uploadStatus, setUploadStatus] = useState<string>("");
-  const [isProfessionInput, setIsProfessionInput] = useState<boolean>(false);
 
   const [formData, setFormData] = useState<FormData>({
     SCRIPT_URL:
@@ -366,13 +365,6 @@ const SolarProOnboarding: React.FC = () => {
       const cityLower = value.trim().toLowerCase();
       const state = cityLookup[cityLower] || "";
       setFormData((prev) => ({ ...prev, state }));
-    }
-
-    if (name === "profession" && value === "Other business") {
-      setIsProfessionInput(true);
-      setFormData((prev) => ({ ...prev, profession: "" })); // Clear profession when switching
-    } else if (name === "profession" && isProfessionInput && value === "") {
-      setIsProfessionInput(false);
     }
   };
 
@@ -767,32 +759,22 @@ const SolarProOnboarding: React.FC = () => {
                     <label className="block text-xs sm:text-sm font-medium mb-1">
                       Profession / Profile
                     </label>
-                    {isProfessionInput ? (
-                      <input
-                        type="text"
-                        name="profession"
-                        value={formData.profession}
-                        onChange={handleInputChange}
-                        placeholder="Enter your profession"
-                        className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    ) : (
-                      <select
-                        name="profession"
-                        value={formData.profession}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      >
-                        {professionOptions.map((opt) => (
-                          <option
-                            key={opt}
-                            value={opt === "-- select --" ? "" : opt}
-                          >
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
-                    )}
+                    <select
+                      name="profession"
+                      value={formData.profession}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      {professionOptions.map((opt) => (
+                        <option
+                          key={opt}
+                          value={opt === "-- select --" ? "" : opt}
+                        >
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                    {/* )} */}
                   </div>
                 </div>
 
