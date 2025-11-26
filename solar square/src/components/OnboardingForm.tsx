@@ -52,7 +52,7 @@ const SolarProOnboarding: React.FC = () => {
 
   const [formData, setFormData] = useState<FormData>({
     SCRIPT_URL:
-      "https://script.google.com/macros/s/AKfycbz7mc6SgEnsl_v0Vd6Y9u7RDlLXGFLrEaG-sdw31wL_2aKsYE0X7K0PgWsZ8-eM7HMx/exec", // <-- IMPORTANT: PASTE YOUR URL HERE
+      "https://script.google.com/macros/s/AKfycbyKQ1SB2-Ibky0dfqEO_Alh_rdu-oanVltB9WPNM-NIajE5ToERS_sObuntSVuoOts/exec", // <-- IMPORTANT: PASTE YOUR URL HERE
     kamName: "",
     kamEmail: "",
     partnerName: "",
