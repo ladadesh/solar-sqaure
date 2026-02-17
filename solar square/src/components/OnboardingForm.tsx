@@ -18,6 +18,7 @@ interface FormData {
   partnerEmail: string;
   partnerMobile: string;
   partnerAddress: string;
+  partnerPincode: string;
   city: string;
   state: string;
   profession: string;
@@ -59,6 +60,7 @@ const SolarProOnboarding: React.FC = () => {
     partnerEmail: "",
     partnerMobile: "",
     partnerAddress: "",
+    partnerPincode: "",
     city: "",
     state: "",
     profession: "",
@@ -548,6 +550,7 @@ const SolarProOnboarding: React.FC = () => {
       setUploadProgress(90);
       const finalRes = await gasp("finalizeSubmission", {
         ...formData,
+        partnerAddress: formData.partnerAddress + " - " + formData.partnerPincode,
         fileMap,
       });
       if (!finalRes.success)
@@ -576,6 +579,7 @@ const SolarProOnboarding: React.FC = () => {
       partnerEmail: "",
       partnerMobile: "",
       partnerAddress: "",
+      partnerPincode: "",
       city: "",
       state: "",
       profession: "",
@@ -738,6 +742,19 @@ const SolarProOnboarding: React.FC = () => {
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     rows={2}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium mb-1">
+                    Partner Pincode *
+                  </label>
+                  <input
+                    type="text"
+                    name="partnerPincode"
+                    value={formData.partnerPincode}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
 
