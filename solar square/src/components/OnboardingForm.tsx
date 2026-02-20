@@ -328,7 +328,7 @@ const SolarProOnboarding: React.FC = () => {
 
   const professionOptions: string[] = [
     "-- select --",
-    
+    "Service/Repair shops",
 "RE Agent",
 "RE Builder",
 "Civil Contractor",
