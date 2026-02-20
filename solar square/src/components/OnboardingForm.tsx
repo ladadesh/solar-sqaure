@@ -361,7 +361,7 @@ const SolarProOnboarding: React.FC = () => {
 "Freelancer (Others)",
 "Sanitary/Tiles Shops",
 "Society Secretaries",
-"Bank Employee"
+"Bank Employee",
     
   ];
 
