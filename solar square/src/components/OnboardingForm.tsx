@@ -342,7 +342,7 @@ const SolarProOnboarding: React.FC = () => {
     "Service/Repair shops",
 "RE Agent",
 "RE Builder",
-"Civil Contractor"
+"Civil Contractor",
 "Building Material Shops",
 "Electrical Shops",
 "Hardware Shops ",
