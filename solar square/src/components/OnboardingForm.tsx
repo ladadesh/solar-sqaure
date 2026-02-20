@@ -328,18 +328,7 @@ const SolarProOnboarding: React.FC = () => {
 
   const professionOptions: string[] = [
     "-- select --",
-    "AC / RO Services",
-    "Builder / Civil contractor / Real estate",
-    "CCTV service provider",
-    "DTH / Cable operator",
-    "Electric / Hardware Contractor Shops",
-    "Freelancer",
-    "Battery - Dealers / Suppliers",
-    "Retired / Salaried Individual",
-    "EV - Car / Bike Showroom / Dealers",
-    "Electricity Billing Counters",
-    "Electronic Consumer Shops",
-    "Service/Repair shops",
+    
 "RE Agent",
 "RE Builder",
 "Civil Contractor",
