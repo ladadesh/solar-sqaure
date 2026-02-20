@@ -339,7 +339,31 @@ const SolarProOnboarding: React.FC = () => {
     "EV - Car / Bike Showroom / Dealers",
     "Electricity Billing Counters",
     "Electronic Consumer Shops",
-    "Other business",
+    “Service/Repair shops”,
+“RE Agent”,
+“RE Builder”,
+“Civil Contractor”,
+“Building Material Shops”,
+“Electrical Shops”,
+“Hardware Shops”,
+“CCTV Service Provider”,
+“DTH/Cable Operator”,
+“Retired/Salaried Individual”,
+“Inverter/Battery Dealer”,
+“Freelancer (Insurance Agent)”,
+“Discom Employee”,
+“Municipal Corporators”,
+“Architect/Interior Designer”,
+“Billing Counter”,
+“Electronic Stores”,
+“Solar Vendor”,
+“Solar Panel Dealer”,
+“Furniture Stores”,
+“Freelancer (Others)”,
+“Sanitary/Tiles Shops”,
+“Society Secretaries”,
+“Bank Employee”
+    
   ];
 
   const businessProfileOptions: string[] = [
