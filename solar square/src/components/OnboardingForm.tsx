@@ -14,6 +14,7 @@ interface FormData {
 
   kamName: string;
   kamEmail: string;
+  partnerDetails: string;
   partnerName: string;
   partnerEmail: string;
   partnerMobile: string;
@@ -38,6 +39,8 @@ interface Files {
   aadhaarBack: File | null;
   panFront: File | null;
   bankProof: File | null;
+  gstCertificate: File | null;
+  depositConfirmation: File | null;
 }
 
 interface CityLookup {
@@ -56,6 +59,7 @@ const SolarProOnboarding: React.FC = () => {
       "https://script.google.com/macros/s/AKfycbyKQ1SB2-Ibky0dfqEO_Alh_rdu-oanVltB9WPNM-NIajE5ToERS_sObuntSVuoOts/exec", // <-- IMPORTANT: PASTE YOUR URL HERE
     kamName: "",
     kamEmail: "",
+    partnerDetails: "",
     partnerName: "",
     partnerEmail: "",
     partnerMobile: "",
@@ -80,6 +84,8 @@ const SolarProOnboarding: React.FC = () => {
     aadhaarBack: null,
     panFront: null,
     bankProof: null,
+    gstCertificate: null,
+    depositConfirmation: null,
   });
 
   const cityLookup: CityLookup = {
@@ -326,6 +332,12 @@ const SolarProOnboarding: React.FC = () => {
     roorkee: "Uttarakhand",
   };
 
+  const partnerDetailsOptions: string[] = [
+    "-- select --",
+    "Lead Model",
+    "Order Clousre Model"
+  ];
+
   const professionOptions: string[] = [
     "-- select --",
     "AC / RO Services",
@@ -348,12 +360,29 @@ const SolarProOnboarding: React.FC = () => {
     "Low",
     "Very High",
   ];
-  const footfallOptions: string[] = [
+  const monthlyOrderPotentialOptions: string[] = [
     "-- select --",
-    "0–20",
-    "20–40",
-    "40–60",
-    "60+",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
   ];
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -551,6 +580,7 @@ const SolarProOnboarding: React.FC = () => {
       const finalRes = await gasp("finalizeSubmission", {
         ...formData,
         partnerAddress: formData.partnerAddress + " - " + formData.partnerPincode,
+        partnerName: formData.partnerName + " - " + formData.partnerDetails,
         fileMap,
       });
       if (!finalRes.success)
@@ -575,6 +605,7 @@ const SolarProOnboarding: React.FC = () => {
       SCRIPT_URL: scriptUrl,
       kamName: "",
       kamEmail: "",
+      partnerDetails: "",
       partnerName: "",
       partnerEmail: "",
       partnerMobile: "",
@@ -598,6 +629,8 @@ const SolarProOnboarding: React.FC = () => {
       aadhaarBack: null,
       panFront: null,
       bankProof: null,
+      gstCertificate: null,
+      depositConfirmation: null,
     });
     setPage(1);
     setShowSuccess(false);
@@ -705,6 +738,27 @@ const SolarProOnboarding: React.FC = () => {
                     autoComplete="email"
                   />
                 </div>
+                <div>
+                    <label className="block text-xs sm:text-sm font-medium mb-1">
+                      Solar Pro Model *
+                    </label>
+                    <select
+                      name="partnerDetails"
+                      value={formData.partnerDetails}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      {partnerDetailsOptions.map((opt) => (
+                        <option
+                          key={opt}
+                          value={opt === "-- select --" ? "" : opt}
+                        >
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                    {/* )} */}
+                  </div>
 
                 <div>
                   <label className="block text-xs sm:text-sm font-medium mb-1">
@@ -734,7 +788,7 @@ const SolarProOnboarding: React.FC = () => {
 
                 <div>
                   <label className="block text-xs sm:text-sm font-medium mb-1">
-                    Partner Address (with Pincode) *
+                    Partner Address *
                   </label>
                   <textarea
                     name="partnerAddress"
@@ -791,7 +845,6 @@ const SolarProOnboarding: React.FC = () => {
                         </option>
                       ))}
                     </select>
-                    {/* )} */}
                   </div>
                 </div>
 
@@ -847,7 +900,7 @@ const SolarProOnboarding: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-xs sm:text-sm font-medium mb-1">
-                      Foot Fall
+                      Monthly Order Potential
                     </label>
                     <select
                       name="footFall"
@@ -855,7 +908,7 @@ const SolarProOnboarding: React.FC = () => {
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      {footfallOptions.map((opt) => (
+                      {monthlyOrderPotentialOptions.map((opt) => (
                         <option
                           key={opt}
                           value={opt === "-- select --" ? "" : opt}
@@ -1022,6 +1075,42 @@ const SolarProOnboarding: React.FC = () => {
                   {files.bankProof && (
                     <div className="text-xs text-green-600 mt-1 truncate">
                       ✓ {files.bankProof.name}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium mb-1">
+                    Upload GST Certificate
+                  </label>
+                  <input
+                    type="file"
+                    name="gstCertificate"
+                    onChange={handleFileChange}
+                    accept="image/*,application/pdf"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                  {files.gstCertificate && (
+                    <div className="text-xs text-green-600 mt-1 truncate">
+                      ✓ {files.gstCertificate.name}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium mb-1">
+                    Upload Deposit Confirmation Receipt
+                  </label>
+                  <input
+                    type="file"
+                    name="depositConfirmation"
+                    onChange={handleFileChange}
+                    accept="image/*,application/pdf"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                  {files.depositConfirmation && (
+                    <div className="text-xs text-green-600 mt-1 truncate">
+                      ✓ {files.depositConfirmation.name}
                     </div>
                   )}
                 </div>
